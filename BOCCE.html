@@ -1,0 +1,575 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2113.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="it"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;App Dati Tiri&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Inter', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f3f4f6;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>@apply bg-white p-6 rounded-xl shadow-lg border border-gray-200;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.player-card {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>@apply bg-white p-4 rounded-xl shadow-md border border-gray-200 flex flex-col items-center;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="flex items-center justify-center min-h-screen p-4"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="app" class="w-full max-w-7xl mx-auto space-y-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-3xl font-bold text-gray-800"&gt;App Tiri Bocce&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="mt-2 text-gray-600"&gt;Inserisci i tiri dei giocatori in tempo reale.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="loading" class="mt-4 hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center justify-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="configSection" class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-xl font-semibold text-gray-700"&gt;Configurazione Sessione&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;form id="configForm" class="mt-4 space-y-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;label for="sessionDate" class="block text-sm font-medium text-gray-700"&gt;Data Allenamento&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;input type="date" id="sessionDate" name="sessionDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="grid grid-cols-1 sm:grid-cols-2 gap-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player1" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 1&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player1" name="player1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player2" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 2&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player2" name="player2" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player3" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 3&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player3" name="player3" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player4" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 4&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player4" name="player4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player5" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 5&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player5" name="player5" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 5"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player6" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 6&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player6" name="player6" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player7" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 7&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player7" name="player7" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 7"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;label for="player8" class="block text-sm font-medium text-gray-700"&gt;Nome Giocatore 8&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" id="player8" name="player8" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" placeholder="Nome Giocatore 8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Avvia Sessione</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/form&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="gameSection" class="hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card text-sm text-gray-700 mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-xl font-semibold text-gray-700"&gt;Il tuo ID sessione&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="mt-2 text-gray-500 text-sm"&gt;Condividi questo ID con la tua squadra per visualizzare i dati in tempo reale. Questo ID ti identifica come autore dei tuoi inserimenti.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mt-2 p-3 bg-gray-100 rounded-lg text-gray-800 break-all font-mono text-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span id="userIdDisplay"&gt;Caricamento...&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">             </span>&lt;div id="playersGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card mt-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-center mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-xl font-semibold text-gray-700"&gt;Riepilogo Statistiche&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button id="exportStatsBtn" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>Esporta Dati</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="statsReport" class="space-y-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-center text-gray-500"&gt;Nessun dato di tiro registrato per questa sessione.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card mt-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h2 class="text-xl font-semibold text-gray-700 mb-4"&gt;Grafico Andamento Tiri di Precisione&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="relative h-96"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;canvas id="accuracyChart"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="chartNoData" class="hidden text-center text-gray-500 mt-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Nessun tiro di precisione registrato per il grafico.</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script type="module"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Variabili globali fornite dall'ambiente</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let db, auth, userId = null;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let isAuthReady = false;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let dynamicPlayerNames = [];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let sessionDate = null;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let chartInstance = null;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const playersGrid = document.getElementById('playersGrid');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const loadingIndicator = document.getElementById('loading');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const userIdDisplay = document.getElementById('userIdDisplay');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const configSection = document.getElementById('configSection');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const gameSection = document.getElementById('gameSection');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const configForm = document.getElementById('configForm');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const statsReport = document.getElementById('statsReport');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const exportStatsBtn = document.getElementById('exportStatsBtn');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const chartNoData = document.getElementById('chartNoData');</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const playerColors = ['#f87171', '#4ade80', '#60a5fa', '#a78bfa', '#facc15', '#f472b6', '#34d399', '#fb923c'];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function showLoading(show) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>loadingIndicator.classList.toggle('hidden', !show);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function createPlayerCards() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>playersGrid.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dynamicPlayerNames.forEach((name, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const card = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>card.className = 'player-card text-center space-y-2';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>card.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="font-bold text-gray-800 text-lg"&gt;${name}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;form id="form-${index}" class="w-full space-y-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="hidden" name="playerName" value="${name}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;select id="shotType-${index}" name="shotType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value=""&gt;Tipo di Tiro&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value="accosto"&gt;Accosto&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value="raffa_boccia"&gt;Raffa alla boccia&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value="raffa_pallino"&gt;Raffa al pallino&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;option value="tiro_volo"&gt;Tiro di volo&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div id="raffaOptions-${index}" class="space-y-2 hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="text-sm font-medium text-gray-700"&gt;Esito:&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center space-x-2 mt-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;label class="flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;input type="radio" name="result-${index}" value="colpita" class="form-radio text-indigo-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="ml-1 text-sm text-gray-700"&gt;Colpita&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;label class="flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;input type="radio" name="result-${index}" value="sbagliata" class="form-radio text-indigo-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="ml-1 text-sm text-gray-700"&gt;Sbagliata&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div id="accostoOptions-${index}" class="space-y-2 hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="block text-sm font-medium text-gray-700"&gt;Distanza dal Pallino (cm):&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;select name="distance" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value=""&gt;Seleziona&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="0"&gt;0&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="20"&gt;20&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="30"&gt;30&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="40"&gt;40&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="50"&gt;50&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="60"&gt;60&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="70"&gt;70&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="100"&gt;100&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option value="&gt;100"&gt;&amp;gt;100&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;label class="text-sm font-medium text-gray-700"&gt;Direzione:&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center space-x-2 mt-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;input type="radio" name="direction-${index}" value="diagonale_dx" class="form-radio text-indigo-600" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="ml-1 text-sm text-gray-700"&gt;Diagonale DX&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;input type="radio" name="direction-${index}" value="diagonale_sx" class="form-radio text-indigo-600" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="ml-1 text-sm text-gray-700"&gt;Diagonale SX&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;input type="radio" name="direction-${index}" value="centrale" class="form-radio text-indigo-600" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="ml-1 text-sm text-gray-700"&gt;Centrale&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>Registra Tiro</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/form&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div id="log-${index}" class="w-full mt-4 space-y-1 text-left text-sm text-gray-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h4 class="font-semibold text-gray-700 text-center"&gt;Ultimi Tiri&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>playersGrid.appendChild(card);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dynamicPlayerNames.forEach((_, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById(`shotType-${index}`).addEventListener('change', () =&gt; toggleOptions(index));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function toggleOptions(playerIndex) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const shotType = document.getElementById(`shotType-${playerIndex}`).value;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const raffaOptions = document.getElementById(`raffaOptions-${playerIndex}`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const accostoOptions = document.getElementById(`accostoOptions-${playerIndex}`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>raffaOptions.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>accostoOptions.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (shotType === 'raffa_boccia' || shotType === 'raffa_pallino' || shotType === 'tiro_volo') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>raffaOptions.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else if (shotType === 'accosto') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>accostoOptions.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>async function initializeAppAndAuth() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>showLoading(true);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const app = initializeApp(firebaseConfig);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>auth = getAuth(app);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>db = getFirestore(app);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>onAuthStateChanged(auth, async (user) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (user) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>userId = user.uid;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>userIdDisplay.textContent = userId;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>isAuthReady = true;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>userId = crypto.randomUUID();</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>userIdDisplay.textContent = userId;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>isAuthReady = true;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>showLoading(false);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (initialAuthToken) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>await signInWithCustomToken(auth, initialAuthToken);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>await signInAnonymously(auth);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Errore nell'inizializzazione o nell'autenticazione:", error);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>userIdDisplay.textContent = "Errore durante l'autenticazione.";</p>
+<p class="p1"><span class="Apple-converted-space">                </span>showLoading(false);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function attachFormListeners() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dynamicPlayerNames.forEach((_, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const form = document.getElementById(`form-${index}`);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>form.addEventListener('submit', async (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>e.preventDefault();</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (!isAuthReady) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>console.error("L'autenticazione non è pronta. Impossibile inviare dati.");</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const formData = new FormData(form);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const shotData = {};</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>for (let [key, value] of formData.entries()) {</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>shotData[key] = value;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const shotType = shotData.shotType;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const logData = {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>playerName: shotData.playerName,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>shotType: shotType,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>direction: shotData[`direction-${index}`],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>sessionDate: sessionDate,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>authorId: userId,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>timestamp: serverTimestamp()</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (shotType === 'accosto') {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>logData.distance = shotData.distance;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>} else if (shotType === 'raffa_boccia' || shotType === 'raffa_pallino' || shotType === 'tiro_volo') {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>logData.result = shotData[`result-${index}`];</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>await addDoc(collection(db, `artifacts/${appId}/public/data/match_shots`), logData);</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>form.reset();</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>toggleOptions(index);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>console.error("Errore durante l'aggiunta del documento:", error);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function updateStatsReport(shots) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const currentSessionShots = shots;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (currentSessionShots.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>statsReport.innerHTML = `&lt;p class="text-center text-gray-500"&gt;Nessun dato di tiro registrato per questa sessione.&lt;/p&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const stats = {};</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dynamicPlayerNames.forEach(name =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats[name] = {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>accosto: { totalDistance: 0, count: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>raffa_boccia: { colpita: 0, count: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>raffa_pallino: { colpita: 0, count: 0 },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>tiro_volo: { colpita: 0, count: 0 }</p>
+<p class="p1"><span class="Apple-converted-space">                </span>};</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentSessionShots.forEach(shot =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const player = shot.playerName;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const type = shot.shotType;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (!stats[player] || !stats[player][type]) { return; }</p>
+<p class="p1"><span class="Apple-converted-space">                </span>stats[player][type].count++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (type === 'accosto') {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const distance = parseInt(shot.distance, 10);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (!isNaN(distance)) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>stats[player][type].totalDistance += distance;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else if (shot.result === 'colpita') {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>stats[player][type].colpita++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let reportHTML = ``;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dynamicPlayerNames.forEach(name =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const playerData = stats[name];</p>
+<p class="p1"><span class="Apple-converted-space">                </span>reportHTML += `&lt;div class="p-4 bg-gray-50 rounded-lg border border-gray-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="font-bold text-gray-900"&gt;${name}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="mt-2 space-y-1 text-sm text-gray-700"&gt;`;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const accostoCount = playerData.accosto.count;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const accostoAvg = accostoCount &gt; 0 ? (playerData.accosto.totalDistance / accostoCount).toFixed(1) : 'N/D';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>reportHTML += `&lt;li&gt;Accosto: ${accostoCount} tiri, Media Distanza: ${accostoAvg} cm&lt;/li&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>['raffa_boccia', 'raffa_pallino', 'tiro_volo'].forEach(type =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const typeCount = playerData[type].count;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const colpitaCount = playerData[type].colpita;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const percentage = typeCount &gt; 0 ? ((colpitaCount / typeCount) * 100).toFixed(1) : '0';</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const typeName = type.replace('_', ' ');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>reportHTML += `&lt;li&gt;${typeName.charAt(0).toUpperCase() + typeName.slice(1)}: ${typeCount} tiri, Percentuale: ${percentage}%&lt;/li&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>reportHTML += `&lt;/ul&gt;&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>statsReport.innerHTML = reportHTML;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function updateChart(shots) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const precisionShots = shots.filter(shot =&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>(shot.shotType === 'raffa_boccia' || shot.shotType === 'raffa_pallino' || shot.shotType === 'tiro_volo')</p>
+<p class="p1"><span class="Apple-converted-space">            </span>);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (precisionShots.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('accuracyChart').classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>chartNoData.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (chartInstance) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>chartInstance.destroy();</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>chartInstance = null;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('accuracyChart').classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>chartNoData.classList.add('hidden');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const playerStats = {};</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dynamicPlayerNames.forEach(name =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>playerStats[name] = { hits: 0, total: 0, data: [] };</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>precisionShots.sort((a, b) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const aTimestamp = a.timestamp ? a.timestamp.toDate().getTime() : 0;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const bTimestamp = b.timestamp ? b.timestamp.toDate().getTime() : 0;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return aTimestamp - bTimestamp;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const labels = [];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let shotCount = 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>precisionShots.forEach((shot, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const player = shot.playerName;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (!playerStats[player]) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>playerStats[player] = { hits: 0, total: 0, data: [] };</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>playerStats[player].total++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (shot.result === 'colpita') {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>playerStats[player].hits++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>shotCount++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>labels.push(`Tiro #${shotCount}`);</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>dynamicPlayerNames.forEach(name =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const hits = playerStats[name] ? playerStats[name].hits : 0;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const total = playerStats[name] ? playerStats[name].total : 0;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const percentage = total &gt; 0 ? (hits / total) * 100 : 0;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>playerStats[name].data.push(percentage);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const datasets = dynamicPlayerNames.map((name, index) =&gt; ({</p>
+<p class="p1"><span class="Apple-converted-space">                </span>label: name,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>data: playerStats[name].data,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>borderColor: playerColors[index % playerColors.length],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>fill: false,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>tension: 0.4</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}));</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ctx = document.getElementById('accuracyChart').getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (chartInstance) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>chartInstance.data.labels = labels;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>chartInstance.data.datasets = datasets;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>chartInstance.update();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>chartInstance = new Chart(ctx, {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>type: 'line',</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>data: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>labels: labels,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>datasets: datasets</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>responsive: true,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>maintainAspectRatio: false,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>plugins: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>legend: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>position: 'top',</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>title: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>display: false,</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>scales: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>y: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>beginAtZero: true,</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>max: 100,</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>title: {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>display: true,</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>text: 'Percentuale Successo (%)'</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function attachFirestoreListener() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!isAuthReady || !sessionDate) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.warn("L'autenticazione o la data della sessione non sono pronte. In attesa...");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const path = `artifacts/${appId}/public/data/match_shots`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const q = query(collection(db, path), where('sessionDate', '==', sessionDate));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>onSnapshot(q, (querySnapshot) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dynamicPlayerNames.forEach((_, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const logDiv = document.getElementById(`log-${index}`);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>logDiv.innerHTML = `&lt;h4 class="font-semibold text-gray-700 text-center"&gt;Ultimi Tiri&lt;/h4&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const shots = [];</p>
+<p class="p1"><span class="Apple-converted-space">                </span>querySnapshot.forEach((doc) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const shotData = doc.data();</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>shots.push(shotData);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>shots.sort((a, b) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const aTimestamp = a.timestamp ? a.timestamp.toDate().getTime() : 0;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const bTimestamp = b.timestamp ? b.timestamp.toDate().getTime() : 0;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>return bTimestamp - aTimestamp;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dynamicPlayerNames.forEach((playerName, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const playerShots = shots.filter(shot =&gt; shot.playerName === playerName).slice(0, 3);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const logDiv = document.getElementById(`log-${index}`);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (playerShots.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>playerShots.forEach(shot =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>const p = document.createElement('p');</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>p.className = 'text-xs text-gray-600';</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>let text = `Tiro: ${shot.shotType}`;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>if (shot.shotType === 'accosto') {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>text += `, Distanza: ${shot.distance} cm`;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>text += `, Esito: ${shot.result}`;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>text += `, Direzione: ${shot.direction}`;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>p.textContent = text;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>logDiv.appendChild(p);</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>const p = document.createElement('p');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>p.className = 'text-xs text-gray-400 text-center';</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>p.textContent = 'Nessun tiro registrato.';</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>logDiv.appendChild(p);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>updateStatsReport(shots);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>updateChart(shots);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, (error) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Errore durante la lettura dei dati:", error);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function exportStats() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const data = statsReport.innerText;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (data.includes("Nessun dato")) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const noDataMessage = document.createElement('p');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>noDataMessage.className = 'text-center text-red-500 mt-2';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>noDataMessage.textContent = 'Nessun dato da esportare.';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>statsReport.appendChild(noDataMessage);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const link = document.createElement('a');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>link.href = URL.createObjectURL(blob);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>link.download = `statistiche-tiri-${sessionDate}.txt`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>link.click();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>URL.revokeObjectURL(link.href);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>configForm.addEventListener('submit', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>e.preventDefault();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const formData = new FormData(configForm);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dynamicPlayerNames = [];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>for (let i = 1; i &lt;= 8; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const name = formData.get(`player${i}`);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (name) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>dynamicPlayerNames.push(name);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>sessionDate = formData.get('sessionDate');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (dynamicPlayerNames.length === 8 &amp;&amp; sessionDate) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>configSection.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>gameSection.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>createPlayerCards();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>attachFirestoreListener();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>attachFormListeners();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>exportStatsBtn.addEventListener('click', exportStats);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Compila tutti i campi prima di avviare la sessione.");</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>initializeAppAndAuth();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
